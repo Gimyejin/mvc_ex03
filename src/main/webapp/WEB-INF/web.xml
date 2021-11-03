@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<!-- DB와 관련된 설정 파일의 위치를 지정한다-->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring/root-context.xml</param-value>
+	</context-param>
+
+	<!-- 이벤트 발생시 처리하는 태그 -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- DispatcherServlet 등록 설정 태그 -->
+	<!-- 
+		servlet-context.xml에서 설정해주는데 그 이름을 appServlet로하여 사용하겠다
+		
+		디스패처서블릿이 appServlet에 설정된 것이며
+		(servlet-class) 해당 디스패처 서블리의 위치(클래스)
+		그래서 디스패처서블릿 설정은 (param-value)/WEB-INF..dp 
+		servlet-context.xml 의 파일이 디스패처 서블ㄹ릿의 설정파일이 되는 것 이다
+		(load-on-startup)1은 첫번째로 현재 서블릿을 실행할 것이라는 말이다
+		결과적으로 디스패처 서블릿이 가장 먼저 객체로 등록
+	 -->
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<!-- /로 들어오는 모든 경로는 서블렛에서 처리할것임 
+		appServlet는 위의 별명을 지정하는 것이 된다
+		url-pattern에 /는 모든 요청이 들어오게 되면 디스패처 서블릿으로 다 보내겠다고 하는것
+		스프링이 알아서 셋팅을 다 해준다
+	-->
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>
+			org.springframework.web.filter.CharacterEncodingFilter
+		</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+</web-app>
